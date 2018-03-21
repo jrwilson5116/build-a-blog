@@ -4,7 +4,8 @@
     <h1>Blog Posts</h1>
     <ul>
         {% for task in tasks %}
-        <li>{{task.title}}</li>
+        <h1>{{task.title}}</h1>
+        {{task.body}}
         {% endfor %}
     </ul>
 
