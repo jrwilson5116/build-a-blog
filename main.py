@@ -1,4 +1,4 @@
-from flask import Flask, request, redirect, render_template
+from flask import Flask, request, redirect, render_template, url_for
 from flask_sqlalchemy import SQLAlchemy 
 
 
@@ -19,10 +19,18 @@ class Blog(db.Model):
         self.title = name
         self.body =body
 
-
-@app.route('/', methods=['POST', 'GET'])
+@app.route('/')
 def index():
-    tasks = Blog.query.all()
+    return redirect(url_for('blog'))
+
+@app.route('/blog', methods=['GET'])
+def blog():
+    blog_post = request.args.get('id')
+
+    if blog_post is None:
+        tasks = Blog.query.all()
+    else:
+        tasks = Blog.query.filter_by(id = blog_post)
     return render_template('blog.html',title="Blog", tasks=tasks)
 
 
@@ -34,8 +42,8 @@ def add_post():
         new_blog = Blog(blog_name,blog_body)
         db.session.add(new_blog)
         db.session.commit()
+        return redirect(url_for('blog'))
     return render_template('newpost.html')
-
 
 if __name__=='__main__':
     app.run()
